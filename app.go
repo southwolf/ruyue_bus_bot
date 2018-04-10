@@ -7,9 +7,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
-	"os"
 )
 
 type SeatsResponse struct {
@@ -33,12 +33,11 @@ func main() {
 	addr := ":" + port
 	http.HandleFunc("/", dashboard)
 	log.Println("Server running on " + addr)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	go func() { log.Fatal(http.ListenAndServe(addr, nil)) }()
 	for {
-		time.Sleep(1 * time.Minute)
 		go check()
+		time.Sleep(1 * time.Minute)
 	}
-
 
 }
 
