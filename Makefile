@@ -5,8 +5,8 @@ tag?=$(git_hash)
 
 build: clean
 	GOOS=linux GOARCH=amd64 go build .
-	docker build -t southwolf/ruyue:$(tag) .
-	docker push southwolf/ruyue:$(tag)
+	docker build -t southwolf/ruyue_bus_bot:$(tag) .
+	docker push southwolf/ruyue_bus_bot:$(tag)
 
 clean:
 	rm -f ./ruyue
