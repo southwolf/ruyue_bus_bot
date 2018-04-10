@@ -8,4 +8,4 @@ WORKDIR /go/src/ruyue/
 
 RUN go build .
 
-CMD ["ruyue"]
+CMD ["./ruyue"]
