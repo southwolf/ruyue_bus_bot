@@ -19,11 +19,20 @@ type SeatsResponse struct {
 	data    string `json:"data"`
 }
 
+var msg = strings.Builder{}
+
 func main() {
+	http.HandleFunc("/", dashboard)
+	log.Fatal(http.ListenAndServe(":80", nil))
+
 	for {
 		time.Sleep(1 * time.Minute)
 		go check()
 	}
+}
+
+func dashboard(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(msg.String()))
 }
 
 func check() {
@@ -47,7 +56,6 @@ func check() {
 		log.Printf("%d: %s", response.StatusCode, body)
 	}
 
-	msg := strings.Builder{}
 	result := gjson.Parse(string(body))
 	fmt.Printf("%s days to go\n", result.Get("data").Get("pct"))
 
@@ -75,11 +83,11 @@ func check() {
 
 func notify(msg string) {
 	botURL := "https://api.telegram.org/bot455106310:AAFvX2OlolvzLG4alNEncFAqh3XpRsU_zjM/sendMessage"
-	msg_json := []byte(`{"chat_id":"552224197", "text":"` + msg + `"}`)
+	msgJson := []byte(`{"chat_id":"552224197", "text":"` + msg + `"}`)
 	client := &http.Client{
 		Timeout: time.Second * 5,
 	}
-	req, _ := http.NewRequest("POST", botURL, bytes.NewBuffer(msg_json))
+	req, _ := http.NewRequest("POST", botURL, bytes.NewBuffer(msgJson))
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
