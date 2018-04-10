@@ -21,6 +21,7 @@ type SeatsResponse struct {
 }
 
 var msg = strings.Builder{}
+var startTime time.Time
 
 func main() {
 	port := os.Getenv("PORT")
@@ -30,17 +31,19 @@ func main() {
 	addr := ":" + port
 	http.HandleFunc("/", dashboard)
 	log.Println("Server running on " + addr)
-
+	log.Fatal(http.ListenAndServe(addr, nil))
+	startTime = time.Now()
 	for {
 		time.Sleep(1 * time.Minute)
 		go check()
 	}
 
-	log.Fatal(http.ListenAndServe(addr, nil))
+
 }
 
 func dashboard(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte(msg.String()))
+	upTime := time.Since(startTime)
+	w.Write([]byte("Running " + upTime.String() + "\n" + msg.String()))
 }
 
 func check() {
