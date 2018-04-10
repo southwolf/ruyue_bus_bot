@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"os"
 )
 
 type SeatsResponse struct {
@@ -22,15 +23,20 @@ type SeatsResponse struct {
 var msg = strings.Builder{}
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "80"
+	}
+	addr := ":" + port
 	http.HandleFunc("/", dashboard)
-	log.Println("Server running on :80")
+	log.Println("Server running on " + addr)
 
 	for {
 		time.Sleep(1 * time.Minute)
 		go check()
 	}
 
-	log.Fatal(http.ListenAndServe(":80", nil))
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
 func dashboard(w http.ResponseWriter, r *http.Request) {
