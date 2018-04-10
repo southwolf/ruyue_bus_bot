@@ -24,6 +24,8 @@ var msg = strings.Builder{}
 var startTime time.Time
 
 func main() {
+	startTime = time.Now()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "80"
@@ -32,7 +34,6 @@ func main() {
 	http.HandleFunc("/", dashboard)
 	log.Println("Server running on " + addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
-	startTime = time.Now()
 	for {
 		time.Sleep(1 * time.Minute)
 		go check()
