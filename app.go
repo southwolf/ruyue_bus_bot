@@ -23,12 +23,14 @@ var msg = strings.Builder{}
 
 func main() {
 	http.HandleFunc("/", dashboard)
-	log.Fatal(http.ListenAndServe(":80", nil))
+	log.Println("Server running on :80")
 
 	for {
 		time.Sleep(1 * time.Minute)
 		go check()
 	}
+
+	log.Fatal(http.ListenAndServe(":80", nil))
 }
 
 func dashboard(w http.ResponseWriter, r *http.Request) {
@@ -36,6 +38,9 @@ func dashboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func check() {
+	msg = strings.Builder{}
+
+	log.Println("Start checking on: " + time.Now().Format(time.Stamp))
 	client := &http.Client{
 		Timeout: time.Second * 5,
 	}
@@ -57,7 +62,7 @@ func check() {
 	}
 
 	result := gjson.Parse(string(body))
-	fmt.Printf("%s days to go\n", result.Get("data").Get("pct"))
+	msg.WriteString(result.Get("data").Get("pct").String() + " days to go:\n")
 
 	isAvailable := false
 	result.Get("data").Get("items").ForEach(func(key, day gjson.Result) bool {
