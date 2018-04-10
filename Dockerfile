@@ -1,7 +1,11 @@
-FROM alpine
+FROM golang:alpine
 
 RUN apk add --no-cache ca-certificates apache2-utils
 
-ADD ruyue /
+COPY . /go/src/ruyue/
 
-CMD ["/ruyue"]
+WORKDIR /go/src/ruyue/
+
+RUN go build .
+
+CMD ["ruyue"]
