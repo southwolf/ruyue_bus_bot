@@ -62,14 +62,15 @@ func checkSwitch() {
 	if err != nil {
 		log.Println(err)
 	}
+	fmt.Println(result.String())
 	prev := checkDisabled
-	checkDisabled = result.Get("result").Get("message").Get("text").String() == "0"
+	checkDisabled = result.Get("result.0.message.text").String() == "0"
 	if checkDisabled {
 		msg.WriteString("Checking disabled on: " + time.Now().Format(time.Stamp))
-		log.Println(msg)
+		log.Println(msg.String())
 	} else {
 		msg.WriteString("Checking enabled on: " + time.Now().Format(time.Stamp))
-		log.Println(msg)
+		log.Println(msg.String())
 	}
 	if checkDisabled != prev {
 		notify(msg.String())
@@ -93,7 +94,7 @@ func checkTickets() {
 		}
 
 		routeNumber := ""
-		result.Get("data").Get("items").ForEach(func(key, route gjson.Result) bool {
+		result.Get("data.items").ForEach(func(key, route gjson.Result) bool {
 			if route.Get("Routenm").String() == "亚运城->宏发广场" {
 				routeNumber = route.Get("prolist").String()
 				return false
@@ -109,10 +110,10 @@ func checkTickets() {
 			log.Println(err)
 		}
 
-		msg.WriteString(result.Get("data").Get("pct").String() + " days to go:\n")
+		msg.WriteString(result.Get("data.pct").String() + " days to go:\n")
 
 		isAvailable := false
-		result.Get("data").Get("items").ForEach(func(key, day gjson.Result) bool {
+		result.Get("data.items").ForEach(func(key, day gjson.Result) bool {
 			day.Get("clsinf").ForEach(func(key, line gjson.Result) bool {
 				date := day.Get("date").String()
 				time := line.Get("clstm").String()
