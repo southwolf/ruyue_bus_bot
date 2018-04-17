@@ -63,6 +63,11 @@ func checkSwitch() {
 		log.Println(err)
 	}
 	checkDisabled = result.Get("result").Get("message").Get("text").String() == "0"
+	if checkDisabled {
+		log.Println("Checking disabled on: " + time.Now().Format(time.Stamp))
+	} else {
+		log.Println("Checking enabled on: " + time.Now().Format(time.Stamp))
+	}
 	return
 }
 
