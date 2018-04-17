@@ -62,11 +62,16 @@ func checkSwitch() {
 	if err != nil {
 		log.Println(err)
 	}
+	prev := checkDisabled
 	checkDisabled = result.Get("result").Get("message").Get("text").String() == "0"
-	if checkDisabled {
-		log.Println("Checking disabled on: " + time.Now().Format(time.Stamp))
-	} else {
-		log.Println("Checking enabled on: " + time.Now().Format(time.Stamp))
+	if checkDisabled != prev {
+		if checkDisabled {
+			msg.WriteString("Checking disabled on: " + time.Now().Format(time.Stamp))
+			log.Println(msg)
+		} else {
+			msg.WriteString("Checking enabled on: " + time.Now().Format(time.Stamp))
+			log.Println(msg)
+		}
 	}
 	return
 }
