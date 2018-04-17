@@ -39,6 +39,7 @@ func main() {
 	for {
 		go checkSwitch()
 		go checkTickets()
+		go keepAwake()
 		time.Sleep(1 * time.Minute)
 	}
 
@@ -47,6 +48,11 @@ func main() {
 func dashboard(w http.ResponseWriter, r *http.Request) {
 	upTime := time.Since(startTime)
 	w.Write([]byte("Running " + upTime.String() + "\n" + msg.String()))
+}
+
+func keepAwake() {
+	appURL := "https://ruyue-bot.herokuapp.com/"
+	get(appURL)
 }
 
 func checkSwitch() {
